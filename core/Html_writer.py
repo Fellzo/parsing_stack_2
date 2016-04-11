@@ -34,9 +34,10 @@ def write_html(output_data, configs):
     for i in range(limit):
         post_link = (link + "%s/") % output_sorted[i][0]    # Ссылка на пост
         # Генерация строки таблицы вида Номер Id Link Кол-во содержательный тегов в посте
-        out += make_tag("tr", make_tag("td", str(i + 1)) + make_tag("td", output_sorted[i][0]) +
-                        make_tag("td", make_tag("a", "Link", attrib="href='%s' target='_blank'" % post_link)) +
-                        make_tag("td", str(output_sorted[i][1])))   # строка таблицы с информацией о посте
+        content = make_tag("td", str(i + 1)) + make_tag("td", output_sorted[i][0])
+        content += make_tag("td", make_tag("a", "Link", attrib="href='%s' target='_blank'" % post_link))
+        content += make_tag("td", str(output_sorted[i][1]))
+        out += make_tag("tr", content)   # строка таблицы с информацией о посте
 
     out = make_tag("table", out, attrib="class='bordered'")     # Добавление тега таблицы
     out = make_tag("body", out)     # Обертка таблицы в тег body
