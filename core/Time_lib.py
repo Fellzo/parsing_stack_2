@@ -1,3 +1,8 @@
+"""
+    Time_lib.py
+    Работа со временем
+"""
+
 import datetime
 import time
 
