@@ -16,7 +16,8 @@ def make_tag(tag, contain, attrib=""):
 def write_html(output_data, configs):
     Logs.add_log("Html generation started.")
     output_sorted = []
-    sort = sorted(output_data, key=lambda x: output_data[x])[::-1]  # Сортировка по количеству содержательных тегов
+    sort = sorted(output_data, key=lambda x: output_data[x]) # Сортировка по количеству содержательных тегов
+    sort = sort[::-1]
     for post in sort:  # Создание списка для вывода постов
         output_sorted.append((post, output_data[post]))
 
