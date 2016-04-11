@@ -12,7 +12,7 @@ meaningful_tags = {}
 
 
 """
-    Проверка значения из поста значению в конфигурации
+    Проверка значения из поста по условию в конфигурации
 """
 
 
@@ -50,7 +50,7 @@ def check_post(post_attr, params):
         post[key.lower()] = post_attr[key]
 
     for param in params:
-        val, operator = params[param].split('&&')
+        val, operator = params[param].split("&&")
         if not (param in post):
             return False
         if operator == "+":
@@ -70,10 +70,12 @@ def check_post(post_attr, params):
 
 
 def parse_tag_string(tag_string):
-    tags_list = tag_string.split('><')
+    tags_list = tag_string.split("><")
     for i in range(len(tags_list)):
-        tags_list[i] = tags_list[i].replace('<', '', 1)[::-1]
-        tags_list[i] = tags_list[i].replace('>', '', 1)[::-1]
+        # разворачивает что бы вырезать только последнюю >
+        tags_list[i] = tags_list[i].replace("<", "", 1)[::-1]
+        # возвращает строку в исходный вид
+        tags_list[i] = tags_list[i].replace(">", "", 1)[::-1]
     return tags_list
 
 
@@ -97,14 +99,29 @@ def filter_tags(minimal_frequency):
 
 
 """
+    Очистка лишних данных после парсинга очередного сайта.
+"""
+
+
+def clear_data():
+    global meaningful_tags
+    meaningful_tags = {}
+    global posts
+    posts = []
+    global interesting_posts
+    interesting_posts = []
+
+
+"""
     Основная функция парсинга xml файла
 """
 
 
 def parse(params, config):
     try:
-        Logs.add_log("Parsing start.")
-        tree = etree.fromstring(open(config['xml_file_name'], encoding='utf-8').read())
+        clear_data()
+        Logs.add_log("Parsing %s start." % config["prefix"])
+        tree = etree.fromstring(open(config["xml_file_name"], encoding="utf-8").read())
         for line in tree:
             # Выборка всех постов
             if line.attrib["PostTypeId"] == "1":
@@ -121,13 +138,14 @@ def parse(params, config):
         output_posts = {}
         # Генерация отсчета вида key = Id val - количество содержательных тегов
         for post in posts:
-            output_posts[post['Id']] = 0
+            output_posts[post["Id"]] = 0
             for tag in parse_tag_string(post["Tags"]):
                 if tag in meaningful_tags:
-                    output_posts[post['Id']] += 1
+                    output_posts[post["Id"]] += 1
+
         Logs.add_log("Parsing finished. Total parsed lines: %d. Total number of interesting posts: %d. " % (
             len(tree), len(interesting_posts)) + "Total tags: %d." % len(meaningful_tags))
-        filter_tags(config['minimal_frequency'])
+        filter_tags(config["minimal_frequency"])
         Logs.add_log("Meaningful tags: %d." % len(meaningful_tags))
         return output_posts
     except:
