@@ -2,6 +2,7 @@
     Html_writer.py
     Генерация html кода
 """
+
 import core.Logs as Logs
 
 """
