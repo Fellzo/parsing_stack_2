@@ -10,7 +10,6 @@ interesting_posts = []
 posts = []
 meaningful_tags = {}
 
-
 """
     Проверка значения из поста по условию в конфигурации
 """
