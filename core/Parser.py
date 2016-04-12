@@ -136,8 +136,9 @@ def parse(params, config):
                     else:
                         meaningful_tags[tag] = 1
         output_posts = {}
+        filter_tags(int(config["minimal_frequency"]))
         # Генерация отсчета вида key = Id val - количество содержательных тегов
-        for post in posts:
+        for post in interesting_posts:
             output_posts[post["Id"]] = 0
             for tag in parse_tag_string(post["Tags"]):
                 if tag in meaningful_tags:
